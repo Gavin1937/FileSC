@@ -262,7 +262,7 @@ void ArgumentHandlerW::printHelp()
         << "Examples:\n"
         << "\tSplit A File: FileSC -s 1024 -f \"path\\to\\file.extension\" -o \"path\\to\\outputdir\"\n\n"
         << "\tConcat Files: FileSC -c -f \"path\\to\\filesdir\" -o \"path\\to\\output\\file.extension\"\n\n"
-        << "\tHint: You can remove file extension and left a single \".\" at the end of\n"
+        << "\tHint: You can remove file extension and left a single \'.\' at the end of\n"
         << "\t      output file to generate a file without extension.\n";
     ;
 }
