@@ -31,12 +31,12 @@ Options:
     
     -f [arguments]      File input, [arguments] should be a complete file/directory.
                         If in Split mode, [arguments] should be a file path.
-                        If in Concat mode, [arguments] should be a directory without '/' or '\' at the end.
+                        If in Concat mode, [arguments] should be a directory.
     
     -c                  Concat Mode.
     
     -o [arguments]      Output, [arguments] should be a complete file/directory.
-                        If in Split mode, [arguments] should be a directory without '/' or '\' at the end.
+                        If in Split mode, [arguments] should be a directory.
                         If in Concat mode, [arguments] should be a file path.
     
 Examples:
