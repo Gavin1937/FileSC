@@ -75,14 +75,24 @@ int main(int argc, char *argv[])
         STRING output;
         
         // get output path, if not provide, set output to current exe path
-        if (arg.hasOutput() && GlobTools::is_directory(arg.getOutput()))
-            output = arg.getOutput()+FWSlash;
-        else
+        if (arg.hasOutput()) {
+            output = arg.getOutput();
 #ifdef WIN32
-            output = GlobTools::getCurrExePathW();
+            if (output.find(L'\"') != STRING::npos || output.find(L'\'') != STRING::npos) {
+                std::wcout << L"Invalid input, Please enter a directory without \'\\\' at the end.\n";
+                return -1;
+            }
+            else if (*(output.end()-1) != L'\\') 
+                output += L'\\';
+            else if (!GlobTools::is_directory(output))
+                output = GlobTools::getCurrExePathW();
 #else
-            output = GlobTools::getCurrExePathA();
+            if (*(output.end()-1) != '/') 
+                output += '/';
+            if (!GlobTools::is_directory(output))
+                output = GlobTools::getCurrExePathA();
 #endif
+        }
         
         // write splitted files
         while (curr_len < total_len) {
@@ -135,43 +145,44 @@ int main(int argc, char *argv[])
         std::vector<STRING> all_files;
         
         // make sure input is directory
-        if (arg.hasInput() && GlobTools::is_directory(arg.getInput())) {
+        if (arg.hasInput()) {
+            STRING loc_in = arg.getInput();
 #ifdef WIN32
-            GlobTools::getFilesUnderDirW(arg.getInput(), all_files);
-            for (auto it : all_files) {
-                std::wcout << it << std::endl;
+            if (*(loc_in.end()-1) == L'\\')
+                loc_in.assign(loc_in.begin(), loc_in.end()-1);
+            else if (loc_in.find(L'\"') != STRING::npos || loc_in.find(L'\'') != STRING::npos) {
+                std::wcout << L"Invalid input, Please enter a directory without \'\\\' at the end.\n";
+                return -1;
             }
-        }
-        else
-            std::wcout << L"Please do not input a single file for concat.\n";
+            if (GlobTools::is_directory(loc_in)) {
+                GlobTools::getFilesUnderDirW(loc_in, all_files);
+                for (auto it : all_files)
+                    std::wcout << it << std::endl;
+            }
 #else
-            GlobTools::getFilesUnderDirA(arg.getInput(), all_files);
-            for (auto it : all_files) {
-                std::cout << it << std::endl;
-            }
-        }
-        else
-            std::cout << "Please do not input a single file for concat.\n";
+            if (GlobTools::is_directory(loc_in)) {
+                GlobTools::getFilesUnderDirA(loc_in, all_files);
+                for (auto it : all_files)
+                    std::cout << it << std::endl;
+            } 
 #endif
+        } else
+            std::cout << "Please do not input a single file for concat.\n";
         
         // get output file path before open
         // if not provide, set output to current exe path
 #ifdef WIN32
         if (arg.hasOutput() && (GlobTools::like_file(arg.getOutput()))) {
             output = arg.getOutput();
-        }
+        } else
+            output = GlobTools::getCurrExePathW() + L"output";
 #else
         if (arg.hasOutput() && (GlobTools::like_file(arg.getOutput()))) {
             output = arg.getOutput();
             // drop '.' for linux output file without an extension
             if (like_file_without_extension(arg.getOutput()))
                 output.assign(output.begin(), output.end()-1);
-        }
-#endif
-        else
-#ifdef WIN32
-            output = GlobTools::getCurrExePathW() + L"output";
-#else
+        } else
             output = GlobTools::getCurrExePathA() + "output";
 #endif
         
