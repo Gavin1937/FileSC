@@ -2,6 +2,7 @@
 
 // C++ STL
 #include <algorithm>
+#include <string>
 
 // Functions
 
@@ -139,6 +140,15 @@ bool GlobTools::getFilesUnderDirA(const std::string& dir, std::vector<std::strin
         for (auto file : std::filesystem::directory_iterator(dir))
             buff.push_back(file.path().filename().string());
     } else return false;
+    // sort buff filenames
+    std::sort(
+        buff.begin(), buff.end(),
+        [](const std::string& left, const std::string& right) {
+            int l = std::stoi(left.substr(left.find_last_of('_') + 1, left.find_last_of('.')));
+            int r = std::stoi(right.substr(right.find_last_of('_') + 1, right.find_last_of('.')));
+            return (l < r);
+        }
+    );
     return true;
 }
 // get file list of input directory
@@ -148,6 +158,15 @@ bool GlobTools::getFilesUnderDirW(const std::wstring& dir, std::vector<std::wstr
         for (auto file : std::filesystem::directory_iterator(dir))
             buff.push_back(file.path().filename().wstring());
     } else return false;
+    // sort buff filenames
+    std::sort(
+        buff.begin(), buff.end(),
+        [](const std::wstring& left, const std::wstring& right) {
+            int l = std::stoi(left.substr(left.find_last_of('_') + 1, left.find_last_of('.')));
+            int r = std::stoi(right.substr(right.find_last_of('_') + 1, right.find_last_of('.')));
+            return (l < r);
+        }
+    );
     return true;
 }
 
