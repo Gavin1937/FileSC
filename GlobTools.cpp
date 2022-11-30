@@ -140,7 +140,7 @@ bool GlobTools::getFilesUnderDirA(const std::string& dir, std::vector<std::strin
         for (auto file : std::filesystem::directory_iterator(dir))
             buff.push_back(file.path().filename().string());
     } else return false;
-    // sort buff filenames
+    // sort buff filenames before return
     std::sort(
         buff.begin(), buff.end(),
         [](const std::string& left, const std::string& right) {
@@ -158,7 +158,7 @@ bool GlobTools::getFilesUnderDirW(const std::wstring& dir, std::vector<std::wstr
         for (auto file : std::filesystem::directory_iterator(dir))
             buff.push_back(file.path().filename().wstring());
     } else return false;
-    // sort buff filenames
+    // sort buff filenames before return
     std::sort(
         buff.begin(), buff.end(),
         [](const std::wstring& left, const std::wstring& right) {
